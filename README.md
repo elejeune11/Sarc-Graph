@@ -9,11 +9,12 @@ The synthetic data (synthetic_data_1, synthetic_data_2, and synthetic_data_3) ar
 
 `geom_fcns.py`- 
 
-      `sarc_list_line_seg()` - https://github.com/elejeune11/Sarc-Graph/blob/main/ALL_MOVIES_RAW/synthetic_data_1/frame_000.png
+      `sarc_list_line_seg()` - 
 
 `render_fcns.py` -
 
-`synthetic_data_1.py`- 
+`synthetic_data_1.py`:
+https://github.com/elejeune11/Sarc-Graph/blob/main/ALL_MOVIES_RAW/synthetic_data_1/frame_000.png
 
 `synthetic_data_2.py`- 
 
