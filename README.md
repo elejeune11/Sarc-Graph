@@ -1,9 +1,21 @@
 # Sarc-Graph
-segmentation, tracking, and analysis of sarcomeres in hiPSC-CMs
+Segmentation, tracking, and analysis of sarcomeres in hiPSC-CMs
 
 # Data
 
 ## Synthetic data
+
+The synthetic data (synthetic_data_1, synthetic_data_2, and synthetic_data_3) are generated with the included scripts:
+
+`geom_fcns.py`- 
+
+`render_fcns.py` -
+
+`synthetic_data_1.py`- 
+
+`synthetic_data_2.py`- 
+
+`synthetic_data_3.py`- 
 
 ## Real data
 
