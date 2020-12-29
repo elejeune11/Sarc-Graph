@@ -7,14 +7,9 @@ Segmentation, tracking, and analysis of sarcomeres in hiPSC-CMs
 
 The synthetic data (synthetic_data_1, synthetic_data_2, and synthetic_data_3) are generated with the included scripts:
 
-`geom_fcns.py`- 
+`geom_fcns.py`- Define a baseline geometry of sarcomere chains. 
 
-      `sarc_list_line_seg()` - 
-      
-      `sarc_list_ellipse_seg()` -
-      
-
-`render_fcns.py` -
+`render_fcns.py` - Render the baseline geometry as a two dimensional movie. 
 
 `synthetic_data_1.py`:
 https://github.com/elejeune11/Sarc-Graph/blob/main/ALL_MOVIES_RAW/synthetic_data_1/frame_000.png
