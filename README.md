@@ -64,31 +64,31 @@ http://soft-matter.github.io/trackpy/v0.4.2/
 
 `analysis_tools.py` - several functions for visualization and data analysis. 
   
-    `visualize_segmentation()`:
+ `visualize_segmentation()`:
      https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/visualize_segmentation.png
     
-    `visualize_contract_anim_movie()`:
+ `visualize_contract_anim_movie()`:
      https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/contract_anim/contract_anim.gif
     
-    `cluster_timeseries_plot_dendrogram()`:
+ `cluster_timeseries_plot_dendrogram()`:
     https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/dendrogram_DTW.pdf
     
-    `plot_normalized_tracked_timeseries()`:
+ `plot_normalized_tracked_timeseries()`:
     https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/timeseries_tracked_normalized.png
     
-    `plot_untracked_absolute_timeseries()`:
+ `plot_untracked_absolute_timeseries()`:
     https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/absolute_sarc_length_untracked.png
     
-    `compute_timeseries_individual_parameters()`:
+ `compute_timeseries_individual_parameters()`:
     https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/timeseries_parameters_info.xlsx
     
-    `compare_tracked_untracked()`:
+ `compare_tracked_untracked()`:
     https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/length_compare_box_plots.png
     
-    `preliminary_spatial_temporal_correlation_info()`:
+ `preliminary_spatial_temporal_correlation_info()`:
     https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/preliminary_spatial_analysis.png
     
-    `compute_F_whole_movie()`:
+ `compute_F_whole_movie()`:
     https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/recovered_F_plot.png
 
 
