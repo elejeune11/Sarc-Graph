@@ -8,6 +8,7 @@ Segmentation, tracking, and analysis of sarcomeres in hiPSC-CMs
 The synthetic data (synthetic_data_1, synthetic_data_2, and synthetic_data_3) are generated with the included scripts:
 
 `geom_fcns.py`- 
+
       `sarc_list_line_seg()` - 
 
 `render_fcns.py` -
