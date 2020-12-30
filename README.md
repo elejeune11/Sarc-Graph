@@ -58,10 +58,10 @@ All code is written in python -- the following packages are required:
 
 `segmentation.py` - segment both z-disks and sarcomeres. 
 
-`spatial_graph.py` - create a spatial graph of the sarcomere chains in the field of view. 
-
 `tracking.py` - track both z-disks and sarcomeres using the trackpy package:
 http://soft-matter.github.io/trackpy/v0.4.2/
+
+`spatial_graph.py` - create a spatial graph of the sarcomere chains in the field of view. 
 
 `timeseries.py` - use the results of tracking to make a timeseries plot for each tracked sarcomere. 
 
