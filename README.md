@@ -70,6 +70,9 @@ http://soft-matter.github.io/trackpy/v0.4.2/
 
 Example output:
 https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/overview_outputs.png
+
+Schematic of computing the approximate deformation gradient:
+https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/process_data.png
   
  `visualize_segmentation()`:
      https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/visualize_segmentation.png
