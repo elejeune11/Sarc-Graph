@@ -67,6 +67,9 @@ http://soft-matter.github.io/trackpy/v0.4.2/
 `timeseries.py` - use the results of tracking to make a timeseries plot for each tracked sarcomere. 
 
 `analysis_tools.py` - several functions for visualization and data analysis:
+
+Example output:
+https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/overview_outputs.png
   
  `visualize_segmentation()`:
      https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/visualize_segmentation.png
