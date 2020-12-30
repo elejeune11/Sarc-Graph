@@ -20,6 +20,9 @@ https://github.com/elejeune11/Sarc-Graph/blob/main/ALL_MOVIES_RAW/synthetic_data
 `synthetic_data_3.py`:
 https://github.com/elejeune11/Sarc-Graph/blob/main/ALL_MOVIES_RAW/synthetic_data_3/frame_000.png
 
+This figure explains schematically how the synthetic data is generated:
+https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/render_synthetic_data.png
+
 ## Real data
 
 The real data (real_data_Sample_1 and real_data_Sample_2) was originally published with the paper ``An Adaptable Software Tool for Efficient Large-Scale Analysis of Sarcomere Function in hiPSC-Cardiomyocytes'' found at https://www.ahajournals.org/doi/full/10.1161/CIRCRESAHA.118.314505 . 
