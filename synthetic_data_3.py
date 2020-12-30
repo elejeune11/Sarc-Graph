@@ -139,7 +139,7 @@ for frame in range(0,num_frames):
 	dim_z = int(4)
 	mean_rad = radius_list_in_slice; mean_hei = height_list_in_slice
 	bound_x = 10; bound_y = 10; bound_z = 10; val = 100
-	matrix = ren.slice_to_matrix(sarc_list,dim_x,dim_y,dim_z,x_lower,x_upper,y_lower,y_upper,z_lower,z_upper, mean_rad, mean_hei, bound_x, bound_y, bound_z,val)
+	matrix = ren.slice_to_matrix(sarc_list_in_slice,dim_x,dim_y,dim_z,x_lower,x_upper,y_lower,y_upper,z_lower,z_upper, mean_rad, mean_hei, bound_x, bound_y, bound_z,val)
 	# add random 
 	mean = 10; std = 1
 	matrix = ren.random_val(matrix,mean,std)

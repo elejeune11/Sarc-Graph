@@ -9,7 +9,7 @@ import glob
 ##########################################################################################
 # Input info and set up 
 ##########################################################################################
-def create_spatial_graph(folder_name):
+def create_spatial_graph(folder_name,include_eps=False):
 	"""Create spatial graph."""
 	num_frames = len(glob.glob('ALL_MOVIES_MATRICES/' + folder_name + '_matrices/*.npy'))
 
@@ -106,13 +106,15 @@ def create_spatial_graph(folder_name):
 	edges,weights = zip(*nx.get_edge_attributes(G,'weight').items())
 
 	if num_frames == 1:
-		nx.draw(G,pos,node_color='g',node_size=50, width=5, edge_color=weights, edge_cmap = plt.cm.autumn)	
+		nx.draw(G,pos,node_color='g',node_size=100, width=5, edge_color=weights, edge_cmap = plt.cm.autumn)	
 	else:
-		nx.draw(G,pos,node_color='g',node_size=50, width=5, edge_color=weights, edge_cmap = plt.cm.coolwarm)		
+		nx.draw(G,pos,node_color='g',node_size=100, width=5, edge_color=weights, edge_cmap = plt.cm.coolwarm)		
 
 	plt.axis('equal')
 		
-	plt.savefig(out_graph + '/basic_graph.png')
+	plt.savefig(out_graph + '/basic_graph')
+	if include_eps:
+		plt.savefig(out_graph + '/basic_graph.eps')
 
 	with open(out_graph + '/graph.pkl', 'wb') as f:
 		pickle.dump(G, f)

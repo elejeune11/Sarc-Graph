@@ -5,7 +5,7 @@ import spatial_graph as sg
 import timeseries as ts
 import analysis_tools as at
 ##########################################################################################
-folder_name_list = ['synthetic_data_1','synthetic_data_2','synthetic_data_3','real_data_Sample1','real_data_Sample2']
+folder_name_list = ['synthetic_data_paper_example'] #['synthetic_data_1','synthetic_data_2','synthetic_data_3','real_data_Sample1','real_data_Sample2']
 ##########################################################################################
 for folder_name in folder_name_list:
 	include_eps = False
@@ -80,5 +80,8 @@ for folder_name in folder_name_list:
 	# --> create and plot F 
 	at.compute_F_whole_movie(folder_name,include_eps)
 	print(folder_name,"compute F complete")
-
+	
+	# --> plot F with some additional analysis 
+	at.analyze_J_full_movie(folder_name,include_eps)
+	print(folder_name,"plot J with parameters")
 

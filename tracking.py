@@ -80,7 +80,9 @@ def run_all_tracking(folder_name,tp_depth):
 	# http://soft-matter.github.io/trackpy/v0.3.0/tutorial/prediction.html
 	t = tp.link_df(features, tp_depth, memory=int(num_frames)) 
 	t1 = tp.filter_stubs(t, int(num_frames*.10))
-
+	# plt.figure()
+	# tp.plot_traj(t1) # --> un-comment this to visualize particle trajectories 
+	
 	# Extract the results from tracking 
 	frame = t1.frame.to_numpy()
 	xall = t1.x.to_numpy()
@@ -104,7 +106,7 @@ def run_all_tracking(folder_name,tp_depth):
 	save_data[:,8] = end2_idx2
 
 	np.savetxt(out_track + '/'+'tracking_results_zdisks.txt',save_data)
-
+	
 	##########################################################################################
 	# ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ # ~ #
 	# Track sarcomeres
@@ -118,10 +120,12 @@ def run_all_tracking(folder_name,tp_depth):
 	features = pd.concat(features)
 
 	# Run tracking --> using the trackpy package 
-	# http://soft-matter.github.io/trackpy/v0.3.0/tutorial/prediction.html
+	# http://soft-matter.github.io/trackpy/v0.3.0/index.html
 	t = tp.link_df(features, tp_depth, memory=int(num_frames))
 	t1 = tp.filter_stubs(t, int(num_frames*.10))
-
+	# plt.figure()
+	# tp.plot_traj(t1) # --> un-comment this to visualize particle trajectories 
+	
 	frame = t1.frame.to_numpy()
 	xall = t1.x.to_numpy()
 	yall = t1.y.to_numpy()
@@ -146,6 +150,6 @@ def run_all_tracking(folder_name,tp_depth):
 	save_data[:,9] = ang_all
 
 	np.savetxt(out_track + '/'+'tracking_results_sarcomeres.txt',save_data)
-	
+
 	return
 

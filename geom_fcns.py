@@ -372,7 +372,7 @@ def get_ground_truth(sarc_list_ALL):
 	return sarc_array, sarc_array_normalized, x_pos_array, y_pos_array
 
 ##########################################################################################
-def plot_3D_geom(folder_name,sarc_list,zm,sm):
+def plot_3D_geom(folder_name,sarc_list,zm,sm,include_eps=False,add_z_pts=False,fname='ground_truth_geom'):
 	"""Make a 3D plot of the ground truth from sarc_list."""
 	fig = plt.figure()
 	ax = fig.add_subplot(111, projection='3d')
@@ -380,31 +380,51 @@ def plot_3D_geom(folder_name,sarc_list,zm,sm):
 	for kk in range(0,len(sarc_list)):
 		pt_1 = sarc_list[kk][0]
 		pt_2 = sarc_list[kk][1]
-		ax.scatter(pt_1[0],pt_1[1],pt_1[2],zm)
-		ax.scatter(pt_2[0],pt_2[1],pt_2[2],zm)
-		ax.plot([pt_1[0], pt_2[0]],[pt_1[1], pt_2[1]],[pt_1[2],pt_2[2]], sm)
+		ax.scatter(pt_1[0],pt_1[1],pt_1[2],c=zm,s=15)
+		ax.scatter(pt_2[0],pt_2[1],pt_2[2],c=zm,s=15)
+		ax.plot([pt_1[0], pt_2[0]],[pt_1[1], pt_2[1]],[pt_1[2],pt_2[2]], sm ,linewidth=3)
+		if kk == 0:
+			ax.scatter(pt_1[0],pt_1[1],pt_1[2],c=zm,s=5,label='z-disk')
+			ax.plot([pt_1[0], pt_2[0]],[pt_1[1], pt_2[1]],[pt_1[2],pt_2[2]], sm ,linewidth=2,label='sarcomere')
+	
+	sarr = np.asarray(sarc_list)
+	if add_z_pts:
+		ax.scatter(0,0,10,s=.001,c='w')
+		ax.scatter(0,0,-10,s=.001,c='w')
+		ax.scatter(-5,-20,0,s=.001,c='w')
+		ax.scatter(45,20,0,s=.001,c='w')
+	
+	ax.set_xticklabels([]); ax.set_yticklabels([]); ax.set_zticklabels([])
+	plt.legend()
 	
 	if not os.path.exists(folder_name):
 		os.makedirs(folder_name)
-	plt.savefig(folder_name + '/ground_truth_geom.png')
+	plt.savefig(folder_name + '/' + fname)
+	if include_eps:
+		plt.savefig(folder_name + '/' + fname + '.eps')
+		
 	return
 
 ##########################################################################################
-def plot_ground_truth_timeseries(sarc_array_normalized, folder_name):
+def plot_ground_truth_timeseries(sarc_array_normalized, folder_name, include_eps=False):
 	"""Plot all of the ground truth timeseries."""
 	if not os.path.exists(folder_name):
 		os.makedirs(folder_name)
 	plt.figure()
 	num_sarc = sarc_array_normalized.shape[0]
 	for kk in range(0,num_sarc):
-		plt.plot(sarc_array_normalized[kk,:])
+		plt.plot(sarc_array_normalized[kk,:],':',linewidth=np.random.random()*2+4)
 	
 	sarc_array_mean = np.mean(sarc_array_normalized,axis=0)
-	plt.plot(sarc_array_mean,'k--',linewidth=3)
-	plt.xlabel('frame')
-	plt.ylabel('normalized sarc length')
-	plt.title('num sarc: %i'%(num_sarc))
-	plt.savefig(folder_name + '/ground truth time series')
+	plt.plot(sarc_array_mean,'k-',linewidth=1,label='mean')
+	plt.legend()
+	plt.xlabel('movie frame')
+	plt.ylabel('normalized fractional length change')
+	plt.title('ground truth timeseries for %i sarcomeres'%(num_sarc))
+	plt.tight_layout()
+	plt.savefig(folder_name + '/ground_truth_time_series')
+	if include_eps:
+		plt.savefig(folder_name + '/ground_truth_time_series.eps')
 	return
 
 
