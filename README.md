@@ -56,7 +56,8 @@ All code is written in python -- the following packages are required:
 
 `file_pre_processing.py` -  convert the input data (movies) into one 2D numpy array per frame. 
 
-`segmentation.py` - segment both z-disks and sarcomeres. 
+`segmentation.py` - segment both z-disks and sarcomeres. Key points of the segmentation algorithms are shown here:
+https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/segment_track_figure.png
 
 `tracking.py` - track both z-disks and sarcomeres using the trackpy package:
 http://soft-matter.github.io/trackpy/v0.4.2/
