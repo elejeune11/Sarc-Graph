@@ -31,6 +31,9 @@ The real data (real_data_Sample_1 and real_data_Sample_2) was originally publish
 
 ## Python packages
 All code is written in python -- the following packages are required:
+
+The most extensive testing has been done in python 3.6.10
+
 * av
 * collections
 * csv
