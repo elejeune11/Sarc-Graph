@@ -45,6 +45,7 @@ The most extensive testing has been done in python 3.6.10
 * numpy
 * os 
 * pandas
+* perlin-noise
 * pickle
 * PIL 
 * scipy
