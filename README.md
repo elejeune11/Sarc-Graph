@@ -55,43 +55,59 @@ The most extensive testing has been done in python 3.6.10
 
 `run_code.py` - this file calls all other functions. 
 
-`file_pre_processing.py` -  convert the input data (movies) into one 2D numpy array per frame. 
+Core image and time series data processing steps: 
 
-`segmentation.py` - segment both z-disks and sarcomeres. Key points of the segmentation algorithms are shown here:
+`file_pre_processing()` -  convert the input data (movies) into one 2D numpy array per frame. 
+
+`segmentation_all()` - segment both z-disks and sarcomeres. Key points of the segmentation algorithms are shown here:
 https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/segment_track_figure.png
 
-`tracking.py` - track both z-disks and sarcomeres using the trackpy package:
+`run_all_tracking()` - track both z-disks and sarcomeres using the trackpy package:
 http://soft-matter.github.io/trackpy/v0.4.2/
 
-`spatial_graph.py` - create a spatial graph of the sarcomere chains in the field of view. 
+`create_spatial_graph()` - create a spatial graph of the sarcomere chains in the field of view. 
 
-`timeseries.py` - use the results of tracking to make a timeseries plot for each tracked sarcomere. 
+`timeseries_all()` - use the results of tracking to make a timeseries plot for each tracked sarcomere. 
 
-`analysis_tools.py` - several functions for visualization and data analysis:
+Functions for data visualization and analysis:
+
+Schematic of computing the approximate deformation gradient F:
+https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/process_data.png
 
 Example output:
 https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/overview_outputs.png
-
-Schematic of computing the approximate deformation gradient:
-https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/process_data.png
   
- `visualize_segmentation()`:
+ `visualize_segmentation()`: 
+ https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/visualize_segmentation_0001.png
     
  `visualize_contract_anim_movie()`:
+ https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/contract_anim.gif
     
  `cluster_timeseries_plot_dendrogram()`:
+ https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/dendrogram_DTW.pdf
     
  `plot_normalized_tracked_timeseries()`:
-    
+ https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/timeseries_tracked_normalized.png
+  
  `plot_untracked_absolute_timeseries()`:
+ https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/absolute_sarc_length_untracked.png
     
  `compute_timeseries_individual_parameters()`:
     
  `compare_tracked_untracked()`:
+ https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/length_compare_box_plots.png
     
  `preliminary_spatial_temporal_correlation_info()`:
+ https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/histogram_time_constants.png
     
  `compute_F_whole_movie()`:
+ https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/recovered_F_plot.png
+ 
+ `analyze_J_full_movie()': 
+ https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/recovered_F_plot_timeseries.png
+ 
+ `visualize_F_full_movie()': 
+ https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/F_anim.gif
 
 
 
