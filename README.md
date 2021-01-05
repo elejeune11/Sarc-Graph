@@ -93,12 +93,13 @@ https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/overview_
  https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/absolute_sarc_length_untracked.png
     
  `compute_timeseries_individual_parameters()`:
+ https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/histogram_time_constants.png
     
  `compare_tracked_untracked()`:
  https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/length_compare_box_plots.png
     
  `preliminary_spatial_temporal_correlation_info()`:
- https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/histogram_time_constants.png
+ https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/preliminary_spatial_analysis.png
     
  `compute_F_whole_movie()`:
  https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/recovered_F_plot.png
