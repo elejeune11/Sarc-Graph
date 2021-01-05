@@ -15,11 +15,14 @@ This figure explains schematically how the synthetic data is generated:
 https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/render_synthetic_data.png
 
 This figure shows the results of analyzing the synthetic data with SarcGraph:
-<ADD>
+https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/validate_synth.pdf
 
 ## Real data
 
 The real data (real_data_E1 and real_data_E2) was originally published with the paper ``An Adaptable Software Tool for Efficient Large-Scale Analysis of Sarcomere Function in hiPSC-Cardiomyocytes'' found at https://www.ahajournals.org/doi/full/10.1161/CIRCRESAHA.118.314505 . 
+
+This figure shows the results of analyzing the real data with SarcGraph:
+https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/Expt_res.pdf
 
 # Code
 
@@ -73,30 +76,22 @@ Schematic of computing the approximate deformation gradient:
 https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/process_data.png
   
  `visualize_segmentation()`:
-     https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/visualize_segmentation.png
     
  `visualize_contract_anim_movie()`:
-     https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/contract_anim/contract_anim.gif
     
  `cluster_timeseries_plot_dendrogram()`:
-    https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/dendrogram_DTW.pdf
     
  `plot_normalized_tracked_timeseries()`:
-    https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/timeseries_tracked_normalized.png
     
  `plot_untracked_absolute_timeseries()`:
-    https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/absolute_sarc_length_untracked.png
     
  `compute_timeseries_individual_parameters()`:
-    https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/timeseries_parameters_info.xlsx
     
  `compare_tracked_untracked()`:
-    https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/length_compare_box_plots.png
     
  `preliminary_spatial_temporal_correlation_info()`:
-    https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/preliminary_spatial_analysis.png
     
  `compute_F_whole_movie()`:
-    https://github.com/elejeune11/Sarc-Graph/blob/main/code_output_synthetic_data_3/analysis/recovered_F_plot.png
+
 
 
