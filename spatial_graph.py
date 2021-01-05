@@ -106,9 +106,9 @@ def create_spatial_graph(folder_name,include_eps=False):
 	edges,weights = zip(*nx.get_edge_attributes(G,'weight').items())
 
 	if num_frames == 1:
-		nx.draw(G,pos,node_color='g',node_size=100, width=5, edge_color=weights, edge_cmap = plt.cm.autumn)	
+		nx.draw(G,pos,node_color='g',node_size=2100, width=5, edge_color=weights, edge_cmap = plt.cm.autumn)	
 	else:
-		nx.draw(G,pos,node_color='g',node_size=100, width=5, edge_color=weights, edge_cmap = plt.cm.coolwarm)		
+		nx.draw(G,pos,node_color='g',node_size=200, width=5, edge_color=weights, edge_cmap = plt.cm.coolwarm)		
 
 	plt.axis('equal')
 		

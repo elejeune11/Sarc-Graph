@@ -2,19 +2,20 @@ import file_pre_processing as fpp
 import segmentation as seg
 import tracking as track
 import spatial_graph as sg
-import timeseries as ts
+import time_series as ts
 import analysis_tools as at
 ##########################################################################################
-folder_name_list = ['synthetic_data_paper_example'] #['synthetic_data_1','synthetic_data_2','synthetic_data_3','real_data_Sample1','real_data_Sample2']
+folder_name_list = ['real_data_E2'] #,'real_data_E2'] 
+
 ##########################################################################################
 for folder_name in folder_name_list:
-	include_eps = False
+	include_eps = True
 	##########################################################################################
 	##########################################################################################
 	##########################################################################################
 	# Convert the movie into a folder of .npy arrays, one for each frame 
 	##########################################################################################
-	fpp.file_pre_processing(folder_name)
+	fpp.file_pre_processing(folder_name,'avi')
 	print(folder_name,"file pre processing complete")
 	# ##########################################################################################
 	# # Run segmentation
@@ -44,11 +45,12 @@ for folder_name in folder_name_list:
 	##########################################################################################
 	# --> visualize segmentation
 	gaussian_filter_size = 1
-	at.visualize_segmentation(folder_name, gaussian_filter_size,include_eps)
+	frame = 0 
+	at.visualize_segmentation(folder_name, gaussian_filter_size, frame, include_eps)
 	print(folder_name,"visualize segmentation complete")
 
 	# # --> visualize contract anim movie 
-	at.visualize_contract_anim_movie(folder_name,include_eps)
+	at.visualize_contract_anim_movie(folder_name,True,True,1.0/3.0,include_eps) # 3 peaks identified
 	print(folder_name,"visualize contract anim movie complete")
 
 	# --> perform timeseries clustering 
@@ -81,7 +83,10 @@ for folder_name in folder_name_list:
 	at.compute_F_whole_movie(folder_name,include_eps)
 	print(folder_name,"compute F complete")
 	
-	# --> plot F with some additional analysis 
+	# --> plot J with some additional analysis 
 	at.analyze_J_full_movie(folder_name,include_eps)
 	print(folder_name,"plot J with parameters")
-
+	
+	# --> visualize F
+	at.visualize_F_full_movie(folder_name)
+	print(folder_name,"visualize F")

@@ -14,7 +14,7 @@ import glob
 ##########################################################################################
 # Input info and set up 
 ##########################################################################################
-def segmentation_all(folder_name, gaussian_filter_size):
+def segmentation_all(folder_name, gaussian_filter_size=1):
 	"""Run all segmentation -- z-disks and sarcomeres"""
 	num_frames = len(glob.glob('ALL_MOVIES_MATRICES/' + folder_name + '_matrices/*.npy'))
 

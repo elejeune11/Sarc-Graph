@@ -11,7 +11,7 @@ import glob
 ##########################################################################################
 # Input info and set up 
 ##########################################################################################
-def run_all_tracking(folder_name,tp_depth): 
+def run_all_tracking(folder_name,tp_depth=4): 
 	"""Run all tracking -- z disks and sarcomeres."""
 	num_frames = len(glob.glob('ALL_MOVIES_MATRICES/' + folder_name + '_matrices/*.npy'))
 
@@ -41,7 +41,7 @@ def run_all_tracking(folder_name,tp_depth):
 		end1_idx2 = file[:,3]
 		end2_idx1 = file[:,4]
 		end2_idx2 = file[:,5]
-		fake_mass = np.ones((file.shape[0]))*11
+		fake_mass = ((end1_idx1 - end2_idx1)**2.0 + (end1_idx2 - end2_idx2)**2.0 )**2.0 * 11
 		orig_idx_all = np.arange(0,file.shape[0],1)
 		return pd.DataFrame(dict( y=cent_idx2, x=cent_idx1, orig_idx=orig_idx_all, end1_idx1=end1_idx1, end1_idx2=end1_idx2, end2_idx1=end2_idx1,end2_idx2=end2_idx2,mass=fake_mass,frame=frame))
 
@@ -60,7 +60,7 @@ def run_all_tracking(folder_name,tp_depth):
 		length = file[:,4]
 		width = file[:,5]
 		angle = file[:,6]
-		fake_mass = np.ones((file.shape[0]))*11
+		fake_mass = width * 11
 		orig_idx_all = np.arange(0,file.shape[0],1)
 		return pd.DataFrame(dict( y=y_cent, x=x_cent, orig_idx=orig_idx_all, ZLID1=ZLID1,ZLID2=ZLID2,length=length,width=width,angle=angle,mass=fake_mass,frame=frame))
 

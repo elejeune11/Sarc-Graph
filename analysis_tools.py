@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import os
 import glob
 import imageio
+import scipy
 from scipy import signal
 from skimage.feature import peak_local_max
 from scipy.signal import find_peaks
@@ -22,13 +23,15 @@ from scipy.spatial.distance import pdist, squareform
 from scipy.cluster.hierarchy import linkage, dendrogram, fcluster, leaves_list
 import networkx as nx
 import scipy
-
+from scipy.linalg import polar
+from numpy import linalg as LA
+import time_series as ts
 ##########################################################################################
 # visualization on the images 
 ##########################################################################################
 
 ##########################################################################################
-def visualize_segmentation(folder_name, gaussian_filter_size,include_eps=False):
+def visualize_segmentation(folder_name, gaussian_filter_size=1,frame_num=0,include_eps=False):
 	"""Visualize the results of z-disk and sarcomere segmentation."""
 	external_folder_name = 'ALL_MOVIES_PROCESSED'
 	if not os.path.exists(external_folder_name):
@@ -39,7 +42,7 @@ def visualize_segmentation(folder_name, gaussian_filter_size,include_eps=False):
 	if not os.path.exists(out_analysis): os.makedirs(out_analysis)
 
 	# --> visualize segmentation
-	raw_img = np.load('ALL_MOVIES_MATRICES/' + folder_name + '_matrices/frame-0000.npy')
+	raw_img = np.load('ALL_MOVIES_MATRICES/' + folder_name + '_matrices/frame-%04d.npy'%(frame_num))
 	# plot of segmented z disks
 	box = -1
 	laplacian = cv2.Laplacian(raw_img,cv2.CV_64F)
@@ -55,28 +58,28 @@ def visualize_segmentation(folder_name, gaussian_filter_size,include_eps=False):
 		if contour.shape[0] >= 8:
 			contour_list.append(contour)
 
-	band_data = np.loadtxt('ALL_MOVIES_PROCESSED/' + folder_name + '/segmented_bands/frame-0000_bands.txt')
+	band_data = np.loadtxt('ALL_MOVIES_PROCESSED/' + folder_name + '/segmented_bands/frame-%04d_bands.txt'%(frame_num))
 	z_disc_x = band_data[:,0]
 	z_disc_y = band_data[:,1]
 
 	# --> import sarcomeres 
-	sarc_data = np.loadtxt('ALL_MOVIES_PROCESSED/' + folder_name + '/segmented_sarc/frame-0000_sarc_data.txt')
+	sarc_data = np.loadtxt('ALL_MOVIES_PROCESSED/' + folder_name + '/segmented_sarc/frame-%04d_sarc_data.txt'%(frame_num))
 	sarc_x = sarc_data[:,2]
 	sarc_y = sarc_data[:,3]
 
 	fig, axs = plt.subplots(1,2,figsize=(10,5))
-	axs[0].imshow(raw_img, cmap=plt.cm.gray); axs[0].set_title('z-disks -- frame 0, %i found'%(len(contour_list)))
+	axs[0].imshow(raw_img, cmap=plt.cm.gray); axs[0].set_title('z-disks -- frame %i, %i found'%(frame_num,len(contour_list)))
 	for kk in range(0,len(contour_list)):
 		cont = contour_list[kk]
 		axs[0].plot(cont[:,1],cont[:,0])
 	
 	axs[0].set_xticks([]); axs[0].set_yticks([])
-	axs[1].imshow(raw_img, cmap=plt.cm.gray); axs[1].set_title('sarcomeres -- frame 0, %i found'%(sarc_x.shape[0]))
+	axs[1].imshow(raw_img, cmap=plt.cm.gray); axs[1].set_title('sarcomeres -- frame %i, %i found'%(frame_num,sarc_x.shape[0]))
 	axs[1].plot(sarc_y,sarc_x,'r*',markersize=3)
 	axs[1].set_xticks([]); axs[1].set_yticks([])
-	plt.savefig(out_analysis + '/visualize_segmentation')
+	plt.savefig(out_analysis + '/visualize_segmentation_%04d'%(frame_num))
 	if include_eps:
-		plt.savefig(out_analysis + '/visualize_segmentation.eps')
+		plt.savefig(out_analysis + '/visualize_segmentation_%04d.eps'%(frame_num))
 	return
 
 ##########################################################################################
@@ -90,7 +93,7 @@ def get_frame_matrix(folder_name, frame):
 	return raw_img
 	
 ##########################################################################################
-def visualize_contract_anim_movie(folder_name,include_eps=False):
+def visualize_contract_anim_movie(folder_name,re_run_timeseries=False, use_re_run_timeseries=False, keep_thresh=0.75,include_eps=False):
 	"""Visualize the results of tracking."""
 	external_folder_name = 'ALL_MOVIES_PROCESSED'
 	if not os.path.exists(external_folder_name):
@@ -101,16 +104,27 @@ def visualize_contract_anim_movie(folder_name,include_eps=False):
 	if not os.path.exists(out_analysis): os.makedirs(out_analysis)
 
 	num_frames = len(glob.glob('ALL_MOVIES_MATRICES/' + folder_name + '_matrices/*.npy'))
-
-	plot_info_frames_fname = 'ALL_MOVIES_PROCESSED/' + folder_name + '/timeseries/plotting_all_frames.pkl'
+	
+	if use_re_run_timeseries:
+		tag_vis = 'for_plotting_'
+		if re_run_timeseries:
+			ts.timeseries_all(folder_name, keep_thresh, True)
+	else:
+		tag_vis = ''
+	
+	plot_info_frames_fname = 'ALL_MOVIES_PROCESSED/' + folder_name + '/timeseries/' + tag_vis + 'plotting_all_frames.pkl'
 	ALL_frames_above_thresh = pickle.load( open( plot_info_frames_fname  , "rb" ) )
-	plot_info_x_pos_fname = 'ALL_MOVIES_PROCESSED/' + folder_name + '/timeseries/plotting_all_x.pkl'
+	plot_info_x_pos_fname = 'ALL_MOVIES_PROCESSED/' + folder_name + '/timeseries/' + tag_vis + 'plotting_all_x.pkl'
 	ALL_x_pos_above_thresh = pickle.load( open( plot_info_x_pos_fname  , "rb" ) )
-	plot_info_y_pos_fname = 'ALL_MOVIES_PROCESSED/' + folder_name + '/timeseries/plotting_all_y.pkl'
+	plot_info_y_pos_fname = 'ALL_MOVIES_PROCESSED/' + folder_name + '/timeseries/' + tag_vis + 'plotting_all_y.pkl'
 	ALL_y_pos_above_thresh = pickle.load( open( plot_info_y_pos_fname  , "rb" ) )
-	sarc_data_normalized_fname = 'ALL_MOVIES_PROCESSED/' + folder_name + '/timeseries/tracking_results_leng.txt'
+	sarc_data_normalized_fname = 'ALL_MOVIES_PROCESSED/' + folder_name + '/timeseries/' + tag_vis + 'tracking_results_leng.txt'
 	all_normalized = np.loadtxt(sarc_data_normalized_fname)
-	out_plots = out_analysis + '/contract_anim'
+	
+	if re_run_timeseries:
+		out_plots = out_analysis + '/for_plotting_contract_anim'
+	else:
+		out_plots = out_analysis + '/contract_anim'
 
 	if not os.path.exists(out_plots): os.makedirs(out_plots)
 
@@ -173,7 +187,7 @@ def DTWDistance(s1, s2):
 	return np.sqrt(DTW[len(s1)-1, len(s2)-1])
 	
 ##########################################################################################
-def cluster_timeseries_plot_dendrogram(folder_name,compute_dist_DTW,compute_dist_euclidean):
+def cluster_timeseries_plot_dendrogram(folder_name,compute_dist_DTW,compute_dist_euclidean=False):
 	"""Cluster timeseries and plot a dendrogram that shows the clustering."""
 	external_folder_name = 'ALL_MOVIES_PROCESSED'
 	if not os.path.exists(external_folder_name):
@@ -249,7 +263,7 @@ def cluster_timeseries_plot_dendrogram(folder_name,compute_dist_DTW,compute_dist
 
 ##########################################################################################
 def plot_normalized_tracked_timeseries(folder_name,include_eps=False):
-	"""Create a plot of the normalized tracked timeseries."""
+	"""Create a plot of the normalized tracked time series."""
 	external_folder_name = 'ALL_MOVIES_PROCESSED'
 	if not os.path.exists(external_folder_name):
 		os.makedirs(external_folder_name)
@@ -383,7 +397,8 @@ def compute_timeseries_individual_parameters(folder_name,include_eps=False):
 		peaks_U, _ = find_peaks(data_med,threshold=th,distance=di,width=wi)
 		peaks_L, _ = find_peaks(-1.0*data_med,threshold=th,distance=di,width=wi)
 	
-		num_peaks = 0.5 * peaks_U.shape[0] + 0.5 * peaks_L.shape[0]
+		#num_peaks = 0.5 * peaks_U.shape[0] + 0.5 * peaks_L.shape[0]
+		num_peaks = peaks_L.shape[0]
 		if num_peaks == 0: num_peaks = 999999
 		mean_C = count_C / num_peaks
 		mean_R = count_R / num_peaks 
@@ -659,7 +674,7 @@ def get_euclid_dist_from_avg_pos(x_vec_1,y_vec_1,x_vec_2,y_vec_2):
 	return np.mean(dist_vec)
 
 ##########################################################################################
-def preliminary_spatial_temporal_correlation_info(folder_name,compute_network_distances,include_eps=False):
+def preliminary_spatial_temporal_correlation_info(folder_name,compute_network_distances=True,include_eps=False):
 	"""Perform a preliminary analysis of spatial/temporal correlation."""
 	num_frames = len(glob.glob('ALL_MOVIES_MATRICES/' + folder_name + '_matrices/*.npy'))
 
@@ -959,7 +974,84 @@ def compute_F_whole_movie(folder_name,include_eps=False):
 	if include_eps:
 		plt.savefig(out_analysis + '/recovered_F_plot.eps')
 	return
+
+##########################################################################################
+def adjust_F_if_movie_starts_not_contracted(folder_name,include_eps=False):
+	"""Adjust and return the average deformation gradient for the whole movie -- useful if first frame is not the relaxed state."""
+	external_folder_name = 'ALL_MOVIES_PROCESSED'
+	if not os.path.exists(external_folder_name):
+		os.makedirs(external_folder_name)
+
+	out_analysis = external_folder_name + '/' + folder_name + '/analysis'
+	if not os.path.exists(external_folder_name + '/' + folder_name): os.makedirs(external_folder_name + '/' + folder_name)
+	if not os.path.exists(out_analysis): os.makedirs(out_analysis)
 	
+	F_list = np.loadtxt(out_analysis + '/recovered_F.txt')
+	J_list = [] #F_vec = [F[0,0],F[0,1],F[1,0],F[1,1]]
+	for kk in range(0,F_list.shape[0]):
+		F00 = F_list[kk,0]; F01 = F_list[kk,1]; F10 = F_list[kk,2]; F11 = F_list[kk,3]
+		J_list.append(F00*F11 - F01*F10)
+	
+	arg_max = np.argmax(J_list)
+	
+	# compute Lambda from x_pos and y_pos 
+	x_pos = np.loadtxt('ALL_MOVIES_PROCESSED/' + folder_name + '/timeseries/tracking_results_x_pos.txt')
+	y_pos = np.loadtxt('ALL_MOVIES_PROCESSED/' + folder_name + '/timeseries/tracking_results_y_pos.txt')
+
+	num_sarc = x_pos.shape[0]
+	num_time = x_pos.shape[1]
+	num_vec = int((num_sarc * num_sarc - num_sarc) / 2.0)
+
+	Lambda_list = []
+	for tt in range(0,num_time):
+		Lambda = np.zeros((2,num_vec))
+		ix = 0
+		for kk in range(0,num_sarc):
+			for jj in range(kk+1,num_sarc):
+				x_vec = x_pos[kk,tt] - x_pos[jj,tt]
+				y_vec = y_pos[kk,tt] - y_pos[jj,tt]
+				Lambda[0,ix] = x_vec
+				Lambda[1,ix] = y_vec 
+				ix += 1 
+
+		Lambda_list.append(Lambda)
+
+	F_list = []; F11_list = []; F22_list = []; F12_list = []; F21_list = []
+	J_list = []  
+	for tt in range(0,num_time):
+		Lambda_0 = Lambda_list[arg_max]
+		Lambda_t = Lambda_list[tt]
+		term_1 = np.dot( Lambda_t , np.transpose(Lambda_0) )
+		term_2 = np.linalg.inv( np.dot( Lambda_0 , np.transpose(Lambda_0) ) )
+		F = np.dot(term_1 , term_2)
+		F_vec = [F[0,0],F[0,1],F[1,0],F[1,1]]
+		F_list.append(F_vec)
+		F11_list.append(F[0,0] - 1.0)
+		F22_list.append(F[1,1] - 1.0)
+		F12_list.append(F[0,1])
+		F21_list.append(F[1,0])
+		J_list.append(F[0,0]*F[1,1] - F[0,1]*F[1,0])
+
+	np.savetxt(out_analysis + '/recovered_F.txt',np.asarray(F_list))
+	plt.figure(figsize=(10,5))
+	plt.subplot(1,2,1)
+	plt.plot(F11_list,'r--',linewidth=5, label='F11 recovered')
+	plt.plot(F22_list,'g--',linewidth=4, label='F22 recovered')
+	plt.plot(F12_list,'c:',label='F12 recovered')
+	plt.plot(F21_list,'b:',label='F21 recovered')
+	plt.legend()
+	plt.title('recovered deformation gradient')
+	plt.xlabel('frames');
+	plt.subplot(1,2,2)
+	plt.plot(J_list,'k-',label='Jacobian')
+	plt.xlabel('frames');
+	plt.legend()
+	plt.title('det of deformation gradient')
+	plt.savefig(out_analysis + '/recovered_F_plot')
+	if include_eps:
+		plt.savefig(out_analysis + '/recovered_F_plot.eps')
+	return
+
 ##########################################################################################
 def analyze_J_full_movie(folder_name,include_eps=False):
 	"""Analyze the Jacobian -- report timeseries parmeters. Must first run compute_F_whole_movie()."""
@@ -985,14 +1077,14 @@ def analyze_J_full_movie(folder_name,include_eps=False):
 	x = np.asarray(x)
 	
 	# compute the parameters of the timeseries
-	plt.figure()
+	plt.figure(figsize=(4,4))
 	plt.plot(J_list,'k-')
 	
 	data = J_list
 	data_med = signal.medfilt(data,5)
 	deriv = np.gradient(data,x)
 	count_C = 0; count_R = 0; count_F = 0
-	thresh_flat = 0.005
+	thresh_flat = 0.01*(np.max(J_list) - np.min(J_list))
 	
 	pix_leng_median = []; pix_leng_mean = []; pix_leng_min = []; pix_leng_max = []; perc_sarc_short = [] 
 	fra_mean_contract_time = []; fra_mean_relax_time = []; fra_mean_flat_time = []; fra_mean_period = []; fra_to_first = [] 
@@ -1000,30 +1092,31 @@ def analyze_J_full_movie(folder_name,include_eps=False):
 	for kk in range(0,x.shape[0]):
 		if deriv[kk] > thresh_flat: 
 			count_R += 1 
-			plt.plot(x[kk],J_list[kk],'co')
+			plt.plot(x[kk],J_list[kk],'o',color=(.5,.5,.5))
 		elif deriv[kk] < -1.0*thresh_flat: 
 			count_C += 1
-			plt.plot(x[kk],J_list[kk],'ro')
+			plt.plot(x[kk],J_list[kk],'o',color=(.5,0,0))
 		else: 
 			count_F += 1 
-			plt.plot(x[kk],J_list[kk],'go')
+			plt.plot(x[kk],J_list[kk],'o',color=(0,0,.5))
 	
 	# detect peaks and valleys 
 	input_distance = 10; input_width = 5 
 	th = .00; di = input_distance; wi = input_width # parameters
 	peaks_U, _ = find_peaks(data_med,threshold=th,distance=di,width=wi)
 	peaks_L, _ = find_peaks(-1.0*data_med,threshold=th,distance=di,width=wi)
-	num_peaks = 0.5 * peaks_U.shape[0] + 0.5 * peaks_L.shape[0]
+	#num_peaks = 0.5 * peaks_U.shape[0] + 0.5 * peaks_L.shape[0]
+	num_peaks = peaks_L.shape[0]
 	if num_peaks == 0: num_peaks = 999999
 	mean_C = count_C / num_peaks
 	mean_R = count_R / num_peaks 
 	mean_F = count_F / num_peaks 
-	
-	plt.plot(x[peaks_U],data[peaks_U],'kx',markersize=10)	
-	plt.plot(x[peaks_L],data[peaks_L],'kx',markersize=10)	
-	plt.title('frames contract: %i, relax: %i, flat: %i, num peaks: %i'%(count_C,count_R,count_F,peaks_U.shape[0] + peaks_L.shape[0]))
+	plt.grid()
+	#plt.plot(x[peaks_U],data[peaks_U],'rx',markersize=10)	
+	plt.plot(x[peaks_L],data[peaks_L],'rx',markersize=13)	
+	plt.title('frames contract: %i, relax: %i, flat: %i'%(count_C,count_R,count_F))
 	plt.xlabel('frame number')
-	plt.ylabel('Jacobian of recovered deformation gradient F')
+	plt.ylabel('determinate of average F')
 	plt.tight_layout()
 	
 	plt.savefig(out_analysis + '/recovered_F_plot_timeseries')
@@ -1031,4 +1124,94 @@ def analyze_J_full_movie(folder_name,include_eps=False):
 		plt.savefig(out_analysis + '/recovered_F_plot_timeseries.eps')
 		
 	return
+
+##########################################################################################
+def visualize_F_full_movie(folder_name,include_eps=False):
+	"""Visualize the Jacobian -- plot timeseries next to the movie. Must first run compute_F_whole_movie()."""
+	external_folder_name = 'ALL_MOVIES_PROCESSED'
+	if not os.path.exists(external_folder_name):
+		os.makedirs(external_folder_name)
+
+	out_analysis = external_folder_name + '/' + folder_name + '/analysis/F_movie'
+	if not os.path.exists(external_folder_name + '/' + folder_name): os.makedirs(external_folder_name + '/' + folder_name)
+	if not os.path.exists(out_analysis): os.makedirs(out_analysis)
 	
+	# import the deformation gradient. 
+	F_list = np.loadtxt(external_folder_name + '/' + folder_name + '/analysis/recovered_F.txt')
+	num_frames = F_list.shape[0]; x = [] 
+	J_list = []
+	R_list = []
+	U_list = [] 
+	F_list_mat = [] 
+	lambda_1_list = []; vec_1_list = [] 
+	lambda_2_list = []; vec_2_list = [] 
+	th_list = [] 
+	for kk in range(0,num_frames):
+		F00 = F_list[kk,0]; F01 = F_list[kk,1]; F10 = F_list[kk,2]; F11 = F_list[kk,3]
+		J_list.append(F00*F11 - F01*F10)
+		x.append(kk)
+		R, U = polar(np.asarray([[F00,F01],[F10,F11]]))
+		R_list.append(R); U_list.append(U); F_list_mat.append(np.asarray([[F00,F01],[F10,F11]]))
+		w, v = LA.eig(U)
+		lambda_1_list.append(w[0]); lambda_2_list.append(w[1])
+		v = np.dot(R, v)
+		vec_1_list.append(v[:,0]); vec_2_list.append(v[:,1])
+		th_list.append(np.arccos(v[0,0]))
+	
+	J_list = np.asarray(J_list)
+	x = np.asarray(x)
+	J_min = np.min(J_list)
+		
+	img_list = [] 
+	# --> plot 
+	for kk in range(0,num_frames):
+		raw_img = get_frame_matrix(folder_name, kk)
+		x_pos_mean = raw_img.shape[0]/2.0; y_pos_mean = raw_img.shape[1]/2.0
+		plt.figure(figsize=(10*.7,5*.7))
+		plt.subplot(1,2,1)
+		plt.imshow(raw_img, cmap=plt.cm.gray)
+		rad = .2*np.min([raw_img.shape[0],raw_img.shape[1]]); th = np.linspace(0,2.0*np.pi,100)
+		plt.plot([y_pos_mean-rad*vec_1_list[kk][1],y_pos_mean+rad*vec_1_list[kk][1]],[x_pos_mean-rad*vec_1_list[kk][0],x_pos_mean+rad*vec_1_list[kk][0]],'-',color=(255/255,204/255,203/255),linewidth=0.3)
+		plt.plot([y_pos_mean-rad*vec_2_list[kk][1],y_pos_mean+rad*vec_2_list[kk][1]],[x_pos_mean-rad*vec_2_list[kk][0],x_pos_mean+rad*vec_2_list[kk][0]],'-',color=(0.5,0.5,0.5),linewidth=0.3)
+		#plt.plot([y_pos_mean,y_pos_mean],[x_pos_mean-rad,x_pos_mean+rad],'-',color=(255/255,204/255,203/255),linewidth=0.2)
+		# add in eigenvector directions
+		x_vec = []; y_vec = [] ; x_vec_circ = []; y_vec_circ = [] 
+		scale = np.asarray([[.9,0],[0,.9]])
+		for jj in range(0,100):
+			v = np.asarray([rad*np.cos(th[jj]),rad*np.sin(th[jj])])
+			#v_def = np.dot(np.dot(F_list_mat[jj],scale),v)
+			nest1 = np.dot(F_list_mat[kk],F_list_mat[kk])
+			nest2 = np.dot(F_list_mat[kk],nest1)
+			nest3 = np.dot(F_list_mat[kk],nest2)
+			nest4 = np.dot(F_list_mat[kk],nest3)
+			nest5 = np.dot(F_list_mat[kk],nest4)
+			nest6 = np.dot(F_list_mat[kk],nest5)
+			nest7 = np.dot(F_list_mat[kk],nest6)
+			nest8 = np.dot(F_list_mat[kk],nest7)
+			v_def = np.dot(nest8,v)
+			x_vec.append(v_def[0] + x_pos_mean); y_vec.append(v_def[1] + y_pos_mean)
+			x_vec_circ.append(x_pos_mean + v[0]); y_vec_circ.append(y_pos_mean + v[1])
+		
+		plt.plot(y_vec_circ,x_vec_circ,'-',color=(255/255,204/255,203/255),linewidth=0.3)
+		plt.plot(y_vec,x_vec,'-',color=(255/255,204/255,203/255),linewidth=1.0)
+		
+		ax = plt.gca()
+		ax.set_xticks([]); ax.set_yticks([]);
+		
+		plt.subplot(1,2,2)
+		plt.plot(x,lambda_1_list,'-',color='k',linewidth=1,label='λ1')
+		plt.plot(x,lambda_2_list,'-',color=(0.5,0.5,0.5),linewidth=1,label='λ2')
+		plt.plot(x[kk],lambda_1_list[kk],'o',mfc=(.7,0,0),mec=(0,0,0),markersize=7)
+		plt.plot(x[kk],lambda_2_list[kk],'o',mfc=(.7,0,0),mec=(0.5,0.5,0.5),markersize=7)
+		plt.xlabel('frame number')
+		plt.legend()
+		plt.tight_layout()
+		plt.savefig(out_analysis + '/frame_%04d'%(kk))
+		if include_eps:
+			plt.savefig(out_analysis + '/frame_%i.eps'%(kk))
+		plt.close()
+		img_list.append(imageio.imread(out_analysis + '/frame_%04d.png'%(kk)))
+	
+	imageio.mimsave(out_analysis + '/F_anim.gif', img_list)
+	
+	return

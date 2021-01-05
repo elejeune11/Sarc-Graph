@@ -13,7 +13,7 @@ import cv2
 #		This may require some changes to accomodate different file types
 ##########################################################################################
 ##########################################################################################
-def file_pre_processing(file_name):
+def file_pre_processing(file_name,extension='avi'):
 	folder_name = 'ALL_MOVIES_MATRICES'
 	if not os.path.exists(folder_name):
 		os.makedirs(folder_name)
@@ -29,7 +29,7 @@ def file_pre_processing(file_name):
 			os.makedirs(folder_output)
 		
 		folder_input  = 'ALL_MOVIES_RAW/' + t1 + '/' + t1 
-		container = av.open(folder_input + '.avi')
+		container = av.open(folder_input + '.' + extension)
 		for frame in container.decode(video=0):
 			frame_img = frame.to_image()
 			frame_npy = np.array(frame_img)
@@ -48,3 +48,31 @@ def file_pre_processing(file_name):
 		plt.axis('off')
 		plt.title(t1)
 		plt.savefig(folder_output + '/sample_image.png')
+
+
+def file_pre_processing_tif(file_name):
+	folder_name = 'ALL_MOVIES_MATRICES'
+	if not os.path.exists(folder_name):
+		os.makedirs(folder_name)	
+	
+	folder_output = folder_name + '/' + file_name + '_matrices'
+	if not os.path.exists(folder_output):
+		os.makedirs(folder_output)
+	
+	im = io.imread('ALL_MOVIES_RAW/' + file_name + '/' + file_name + '.tif')
+	
+	for kk in range(0,im.shape[0]):
+		frame_npy = 0.2989 * im[kk,:,:,0] + 0.5870 * im[kk,:,:,1] +  0.1140 * im[kk,:,:,2]
+		np.save(folder_output + '/frame-%04d' % (kk), frame_npy)
+	
+	plt.figure()
+	plt.imshow(frame_npy)
+	plt.axis('off')
+	plt.title(file_name)
+	plt.savefig(folder_output + '/sample_image.png')
+	
+	
+	
+	
+	
+	
