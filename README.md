@@ -5,27 +5,21 @@ Segmentation, tracking, and analysis of sarcomeres in hiPSC-CMs
 
 ## Synthetic data
 
-The synthetic data (synthetic_data_1, synthetic_data_2, and synthetic_data_3) are generated with the included scripts:
+The synthetic data (S1-S5) are generated with the included scripts:
 
 `geom_fcns.py`- Functions to define a baseline geometry of sarcomere chains. 
 
 `render_fcns.py` - Functions to render the baseline geometry as a two dimensional movie. 
 
-`synthetic_data_1.py`:
-https://github.com/elejeune11/Sarc-Graph/blob/main/ALL_MOVIES_RAW/synthetic_data_1/frame_000.png
-
-`synthetic_data_2.py`:
-https://github.com/elejeune11/Sarc-Graph/blob/main/ALL_MOVIES_RAW/synthetic_data_2/frame_000.png
-
-`synthetic_data_3.py`:
-https://github.com/elejeune11/Sarc-Graph/blob/main/ALL_MOVIES_RAW/synthetic_data_3/frame_000.png
-
 This figure explains schematically how the synthetic data is generated:
 https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/render_synthetic_data.png
 
+This figure shows the results of analyzing the synthetic data with SarcGraph:
+<ADD>
+
 ## Real data
 
-The real data (real_data_Sample_1 and real_data_Sample_2) was originally published with the paper ``An Adaptable Software Tool for Efficient Large-Scale Analysis of Sarcomere Function in hiPSC-Cardiomyocytes'' found at https://www.ahajournals.org/doi/full/10.1161/CIRCRESAHA.118.314505 . 
+The real data (real_data_E1 and real_data_E2) was originally published with the paper ``An Adaptable Software Tool for Efficient Large-Scale Analysis of Sarcomere Function in hiPSC-Cardiomyocytes'' found at https://www.ahajournals.org/doi/full/10.1161/CIRCRESAHA.118.314505 . 
 
 # Code
 
