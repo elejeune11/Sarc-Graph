@@ -106,10 +106,10 @@ https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/overview_
  `compute_F_whole_movie()`:
  https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/recovered_F_plot.png
  
- `analyze_J_full_movie()': 
+ `analyze_J_full_movie()`: 
  https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/recovered_F_plot_timeseries.png
  
- `visualize_F_full_movie()': 
+ `visualize_F_full_movie()`: 
  https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/F_anim.gif
 
 
