@@ -1,6 +1,8 @@
 # Sarc-Graph
 Segmentation, tracking, and analysis of sarcomeres in hiPSC-CMs
 
+pre print link will be posted soon. 
+
 # Data
 
 ## Synthetic data
@@ -111,4 +113,8 @@ https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/overview_
  https://github.com/elejeune11/Sarc-Graph/blob/main/real_data_E1_results/F_anim.gif
 
 
+## Contact
+Don't hesitate to get in touch for additional information 
 
+## Acknowledgements 
+This work was supported by the CELL-MET Engineering Research Center NSF ECC-1647837.
