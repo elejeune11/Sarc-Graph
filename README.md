@@ -77,7 +77,7 @@ http://soft-matter.github.io/trackpy/v0.4.2/
 `run_code.py` - this file calls all other functions. To set up a movie `filename.avi` do the following:
 * create a directory named `filename` in the folder `ALL_MOVIES_RAW`
 * place `filename.avi`in the `ALL_MOVIES_RAW/filename` folder 
-* add `filename` to the list `folder_name_list' in `run_code.py`
+* add `filename` to the list `folder_name_list` in `run_code.py`
 Note: for .mov files, .mov must be specified in the call to `file_pre_processing()`, for arbitrary file types, alternative functions can be added to the `file_pre_processing()` script -- an example template is included in the code. 
 
 Core image and time series data processing steps: 
