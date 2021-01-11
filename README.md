@@ -33,26 +33,44 @@ All code is written in python -- the following packages are required:
 
 The most extensive testing has been done in python 3.6.10
 
-* av
+* av:
 https://pypi.org/project/av/
-* collections
-* csv
-* cv2
-* glob
-* imageio
-* matplotlib
-* networkx
-* numpy
-* os 
-* pandas
-* perlin-noise
-* pickle
-* PIL 
-* scipy
-* skimage
-* sklearn.gaussian_process
-* sys
-* trackpy
+* collections:
+https://docs.python.org/3/library/collections.html
+* csv:
+https://docs.python.org/3.6/library/csv.html
+* cv2:
+https://pypi.org/project/opencv-python/
+* glob:
+https://docs.python.org/3.6/library/glob.html
+* imageio:
+https://pypi.org/project/imageio/
+* matplotlib:
+https://matplotlib.org/3.1.1/users/installing.html
+* networkx:
+https://networkx.org/documentation/stable/install.html
+* numpy:
+https://numpy.org/install/
+* os:
+https://docs.python.org/3.6/library/os.path.html
+* pandas:
+https://pandas.pydata.org/pandas-docs/stable/getting_started/install.html
+* perlin-noise:
+https://pypi.org/project/perlin-noise/
+* pickle:
+https://docs.python.org/3.6/library/pickle.html
+* PIL:
+https://pypi.org/project/Pillow/
+* scipy:
+https://www.scipy.org/install.html
+* skimage:
+https://scikit-image.org/docs/dev/install.html
+* sklearn.gaussian_process:
+https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html
+* sys:
+https://docs.python.org/3/library/sys.html
+* trackpy:
+http://soft-matter.github.io/trackpy/v0.4.2/
 
 ## Scripts
 
