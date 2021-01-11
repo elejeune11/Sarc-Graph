@@ -34,6 +34,7 @@ All code is written in python -- the following packages are required:
 The most extensive testing has been done in python 3.6.10
 
 * av
+https://pypi.org/project/av/
 * collections
 * csv
 * cv2
