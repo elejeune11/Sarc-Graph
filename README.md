@@ -95,6 +95,8 @@ http://soft-matter.github.io/trackpy/v0.4.2/
 
 `timeseries_all()` - use the results of tracking to make a timeseries plot for each tracked sarcomere. 
 
+`compute_metrics()` - compute functional metrics for each movie, defined in our forthcoming paper.
+
 Functions for data visualization and analysis:
 
 Schematic of computing the approximate deformation gradient F:
