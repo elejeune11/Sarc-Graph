@@ -26,6 +26,7 @@ import scipy
 from scipy.linalg import polar
 from numpy import linalg as LA
 import time_series as ts
+import moviepy.editor as mp
 ##########################################################################################
 # visualization on the images 
 ##########################################################################################
@@ -93,7 +94,7 @@ def get_frame_matrix(folder_name, frame):
 	return raw_img
 	
 ##########################################################################################
-def visualize_contract_anim_movie(folder_name,re_run_timeseries=False, use_re_run_timeseries=False, keep_thresh=0.75,include_eps=False):
+def visualize_contract_anim_movie(folder_name,re_run_timeseries=False, use_re_run_timeseries=False, keep_thresh=0.75,include_eps=False,single_frame=False):
 	"""Visualize the results of tracking."""
 	external_folder_name = 'ALL_MOVIES_PROCESSED'
 	if not os.path.exists(external_folder_name):
@@ -104,6 +105,8 @@ def visualize_contract_anim_movie(folder_name,re_run_timeseries=False, use_re_ru
 	if not os.path.exists(out_analysis): os.makedirs(out_analysis)
 
 	num_frames = len(glob.glob('ALL_MOVIES_MATRICES/' + folder_name + '_matrices/*.npy'))
+	if single_frame:
+		num_frames = 1
 	
 	if use_re_run_timeseries:
 		tag_vis = 'for_plotting_'
@@ -121,7 +124,7 @@ def visualize_contract_anim_movie(folder_name,re_run_timeseries=False, use_re_ru
 	sarc_data_normalized_fname = 'ALL_MOVIES_PROCESSED/' + folder_name + '/timeseries/' + tag_vis + 'tracking_results_leng.txt'
 	all_normalized = np.loadtxt(sarc_data_normalized_fname)
 	
-	if re_run_timeseries:
+	if use_re_run_timeseries:
 		out_plots = out_analysis + '/for_plotting_contract_anim'
 	else:
 		out_plots = out_analysis + '/contract_anim'
@@ -161,8 +164,119 @@ def visualize_contract_anim_movie(folder_name,re_run_timeseries=False, use_re_ru
 			plt.savefig(out_plots + '/' + file_root + '_length.eps')
 		plt.close()
 		img_list.append(imageio.imread(out_plots + '/' + file_root + '_length.png'))
+	
+	if num_frames > 1:
+		imageio.mimsave(out_plots + '/contract_anim.gif', img_list)
+	
+# 	clip = mp.VideoFileClip(out_plots + '/contract_anim.gif')
+# 	clip.write_videofile( 'Kehan_Tracked_Movies/' + folder_name + '.mp4') # put all movies in one folder
+	
+	return
 
-	imageio.mimsave(out_plots + '/contract_anim.gif', img_list)
+##########################################################################################
+# plot the spatial graph 
+##########################################################################################
+
+##########################################################################################
+def visualize_spatial_graph(folder_name,include_eps=False):
+	external_folder_name = 'ALL_MOVIES_PROCESSED'
+	if not os.path.exists(external_folder_name):
+		os.makedirs(external_folder_name)
+
+	out_analysis = external_folder_name + '/' + folder_name + '/analysis'
+	if not os.path.exists(external_folder_name + '/' + folder_name): os.makedirs(external_folder_name + '/' + folder_name)
+	if not os.path.exists(out_analysis): os.makedirs(out_analysis)
+	
+	######################################################################################
+	out_graph = 'ALL_MOVIES_PROCESSED' + '/' + folder_name + '/graph'
+	with open(out_graph + '/graph.pkl', 'rb') as f: G = pickle.load(f)
+	with open(out_graph + '/pos.pkl', 'rb') as f: pos = pickle.load(f)
+
+	# plot spatial graph 
+	G2 = nx.Graph()
+	nodes_list = list(G.nodes())
+
+	for kk in range(0,len(nodes_list)): G2.add_node(nodes_list[kk])
+	edges_list = list(G.edges())
+	orient_list = [] 
+
+	for kk in range(0,len(edges_list)):
+		# define the angle of the edge
+		node_1_ix = edges_list[kk][0]
+		node_2_ix = edges_list[kk][1]
+		x1 = pos[node_1_ix][0]
+		x2 = pos[node_2_ix][0]
+		y1 = pos[node_1_ix][1]
+		y2 = pos[node_2_ix][1]
+		rad = ((x1-x2)**2.0 + (y1-y2)**2.0)**0.5
+		x_val = (x2-x1)/rad
+		y_val = (y2-y1)/rad
+		ang = np.abs(np.dot([1,0],[x_val,y_val]))
+		orient_list.append(ang)
+		G2.add_edge(node_1_ix,node_2_ix,weight=ang)
+
+	# for each node, determine local alignment -- 
+	node_val_list = [] 
+
+	for kk in range(0,len(nodes_list)):
+		ix = nodes_list[kk]
+		ed_li = list(G.edges(ix))
+		val = 0
+		num = 0
+		for jj in range(0,len(ed_li)):
+			for ii in range(jj+1,len(ed_li)):
+				node_1a_ix = ed_li[jj][0]
+				node_1b_ix = ed_li[jj][1]
+				node_2a_ix = ed_li[ii][0]
+				node_2b_ix = ed_li[ii][1]
+			
+				x1a = pos[node_1a_ix][0]
+				x1b = pos[node_1b_ix][0]
+				y1a = pos[node_1a_ix][1]
+				y1b = pos[node_1b_ix][1]
+			
+				x2a = pos[node_2a_ix][0]
+				x2b = pos[node_2b_ix][0]
+				y2a = pos[node_2a_ix][1]
+				y2b = pos[node_2b_ix][1]
+			
+				rad1 = ((x1a-x1b)**2.0 + (y1a-y1b)**2.0)**0.5
+				rad2 = ((x2a-x2b)**2.0 + (y2a-y2b)**2.0)**0.5
+			
+				vec1 = [(x1a-x1b)/rad1,(y1a-y1b)/rad1]
+				vec2 = [(x2a-x2b)/rad2,(y2a-y2b)/rad2]
+			
+				val += np.abs(np.dot( vec1 , vec2 ))
+				num += 1 
+	
+		if num > 0:
+			node_val_list.append(val/num)
+		else:
+			node_val_list.append(0)
+	
+	plt.figure(figsize=(5,5))
+	edges,weights = zip(*nx.get_edge_attributes(G2,'weight').items())
+	nx.draw(G2,pos,node_color='k',node_size=10, width=2, edge_color=weights, edge_cmap = plt.cm.rainbow)
+
+	x_list = []; y_list = [] 
+	mi = np.min(node_val_list); ma = np.max(node_val_list)
+	for kk in range(0,len(nodes_list)):
+		ix = nodes_list[kk]
+		x = pos[ix][0]
+		y = pos[ix][1]
+		val = 1 - ((node_val_list[kk] - mi) /(ma - mi)*0.75 + 0.25)
+		if node_val_list[kk] > .9:
+			plt.plot(x,y,'.',color=(val,val,val),ms=10)
+		if node_val_list[kk] > .75:
+			plt.plot(x,y,'.',color=(val,val,val),ms=7.5)
+		else:
+			plt.plot(x,y,'.',color=(val,val,val),ms=5)	
+	
+	######################################################################################
+	plt.savefig(out_analysis + '/' + folder_name + '_spatial_graph')
+	if include_eps:
+		plt.savefig(out_analysis + '/' + folder_name + '_spatial_graph.eps')
+	plt.close()
 	return
 	
 ##########################################################################################
@@ -1127,7 +1241,7 @@ def analyze_J_full_movie(folder_name,include_eps=False):
 
 ##########################################################################################
 def visualize_F_full_movie(folder_name,include_eps=False):
-	"""Visualize the Jacobian -- plot timeseries next to the movie. Must first run compute_F_whole_movie()."""
+	"""Visualize the eigenvalues of F -- plot timeseries next to the movie. Must first run compute_F_whole_movie()."""
 	external_folder_name = 'ALL_MOVIES_PROCESSED'
 	if not os.path.exists(external_folder_name):
 		os.makedirs(external_folder_name)
@@ -1153,9 +1267,9 @@ def visualize_F_full_movie(folder_name,include_eps=False):
 		R, U = polar(np.asarray([[F00,F01],[F10,F11]]))
 		R_list.append(R); U_list.append(U); F_list_mat.append(np.asarray([[F00,F01],[F10,F11]]))
 		w, v = LA.eig(U)
-		lambda_1_list.append(w[0]); lambda_2_list.append(w[1])
+		lambda_1_list.append(np.min(w)); lambda_2_list.append(np.max(w))
 		v = np.dot(R, v)
-		vec_1_list.append(v[:,0]); vec_2_list.append(v[:,1])
+		vec_1_list.append(v[:,np.argmin(w)]); vec_2_list.append(v[:,np.argmax(w)])
 		th_list.append(np.arccos(v[0,0]))
 	
 	J_list = np.asarray(J_list)
@@ -1215,3 +1329,100 @@ def visualize_F_full_movie(folder_name,include_eps=False):
 	imageio.mimsave(out_analysis + '/F_anim.gif', img_list)
 	
 	return
+	
+##########################################################################################
+def save_lambda_from_F(folder_name,include_eps=False):
+	"""Visualize the eigenvalues of F -- plot timeseries next to the movie. Must first run compute_F_whole_movie()."""
+	external_folder_name = 'ALL_MOVIES_PROCESSED'
+	if not os.path.exists(external_folder_name):
+		os.makedirs(external_folder_name)
+
+	out_analysis = external_folder_name + '/' + folder_name + '/analysis'
+	if not os.path.exists(external_folder_name + '/' + folder_name): os.makedirs(external_folder_name + '/' + folder_name)
+	if not os.path.exists(out_analysis): os.makedirs(out_analysis)
+	
+	# import the deformation gradient. 
+	F_list = np.loadtxt(external_folder_name + '/' + folder_name + '/analysis/recovered_F.txt')
+	num_frames = F_list.shape[0]; x = [] 
+	J_list = []
+	R_list = []
+	U_list = [] 
+	F_list_mat = [] 
+	lambda_1_list = []; vec_1_list = [] 
+	lambda_2_list = []; vec_2_list = [] 
+	th_list = [] 
+	for kk in range(0,num_frames):
+		F00 = F_list[kk,0]; F01 = F_list[kk,1]; F10 = F_list[kk,2]; F11 = F_list[kk,3]
+		J_list.append(F00*F11 - F01*F10)
+		x.append(kk)
+		R, U = polar(np.asarray([[F00,F01],[F10,F11]]))
+		R_list.append(R); U_list.append(U); F_list_mat.append(np.asarray([[F00,F01],[F10,F11]]))
+		w, v = LA.eig(U)
+		lambda_1_list.append(np.min(w)); lambda_2_list.append(np.max(w))
+		v = np.dot(R, v)
+		vec_1_list.append(v[:,np.argmin(w)]); vec_2_list.append(v[:,np.argmax(w)])
+		th_list.append(np.arccos(v[0,0]))
+	
+	J_list = np.asarray(J_list)
+	x = np.asarray(x)
+	J_min = np.min(J_list)
+		
+	# --> plot 
+	kk = np.argmin(J_list)
+	raw_img = get_frame_matrix(folder_name, kk)
+	x_pos_mean = raw_img.shape[0]/2.0; y_pos_mean = raw_img.shape[1]/2.0
+	plt.figure(figsize=(10*.7,5*.7))
+	plt.subplot(1,2,1)
+	plt.imshow(raw_img, cmap=plt.cm.gray)
+	rad = .2*np.min([raw_img.shape[0],raw_img.shape[1]]); th = np.linspace(0,2.0*np.pi,100)
+	plt.plot([y_pos_mean-rad*vec_1_list[kk][1],y_pos_mean+rad*vec_1_list[kk][1]],[x_pos_mean-rad*vec_1_list[kk][0],x_pos_mean+rad*vec_1_list[kk][0]],'-',color=(255/255,204/255,203/255),linewidth=0.3)
+	plt.plot([y_pos_mean-rad*vec_2_list[kk][1],y_pos_mean+rad*vec_2_list[kk][1]],[x_pos_mean-rad*vec_2_list[kk][0],x_pos_mean+rad*vec_2_list[kk][0]],'-',color=(0.5,0.5,0.5),linewidth=0.3)
+	#plt.plot([y_pos_mean,y_pos_mean],[x_pos_mean-rad,x_pos_mean+rad],'-',color=(255/255,204/255,203/255),linewidth=0.2)
+	# add in eigenvector directions
+	x_vec = []; y_vec = [] ; x_vec_circ = []; y_vec_circ = [] 
+	scale = np.asarray([[.9,0],[0,.9]])
+	for jj in range(0,100):
+		v = np.asarray([rad*np.cos(th[jj]),rad*np.sin(th[jj])])
+		#v_def = np.dot(np.dot(F_list_mat[jj],scale),v)
+		nest1 = np.dot(F_list_mat[kk],F_list_mat[kk])
+		nest2 = np.dot(F_list_mat[kk],nest1)
+		nest3 = np.dot(F_list_mat[kk],nest2)
+		nest4 = np.dot(F_list_mat[kk],nest3)
+		nest5 = np.dot(F_list_mat[kk],nest4)
+		nest6 = np.dot(F_list_mat[kk],nest5)
+		nest7 = np.dot(F_list_mat[kk],nest6)
+		nest8 = np.dot(F_list_mat[kk],nest7)
+		v_def = np.dot(nest8,v)
+		x_vec.append(v_def[0] + x_pos_mean); y_vec.append(v_def[1] + y_pos_mean)
+		x_vec_circ.append(x_pos_mean + v[0]); y_vec_circ.append(y_pos_mean + v[1])
+	
+	plt.plot(y_vec_circ,x_vec_circ,'-',color=(255/255,204/255,203/255),linewidth=0.3)
+	plt.plot(y_vec,x_vec,'-',color=(255/255,204/255,203/255),linewidth=1.0)
+	
+	ax = plt.gca()
+	ax.set_xticks([]); ax.set_yticks([]);
+	
+	plt.subplot(1,2,2)
+	plt.plot(x,lambda_1_list,'-',color='k',linewidth=1,label='λ1')
+	plt.plot(x,lambda_2_list,'-',color=(0.5,0.5,0.5),linewidth=1,label='λ2')
+	plt.plot(x[kk],lambda_1_list[kk],'o',mfc=(.7,0,0),mec=(0,0,0),markersize=7)
+	plt.plot(x[kk],lambda_2_list[kk],'o',mfc=(.7,0,0),mec=(0.5,0.5,0.5),markersize=7)
+	plt.xlabel('frame number')
+	plt.legend()
+	plt.tight_layout()
+	plt.savefig(out_analysis + '/' + folder_name + '_plot_lambda_frame_%04d'%(kk))
+	if include_eps:
+		plt.savefig(out_analysis + '/' + folder_name + '_plot_lambda_frame_%i.eps'%(kk))
+	plt.close()
+	
+	lambda_list = np.zeros((len(lambda_1_list),2))
+	lambda_list[:,0] = np.asarray(lambda_1_list)
+	lambda_list[:,1] = np.asarray(lambda_2_list)	
+	
+	np.savetxt(out_analysis + 'lambda_all.txt',lambda_list)
+	return
+
+
+
+
+

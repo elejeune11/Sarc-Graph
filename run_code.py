@@ -4,19 +4,35 @@ import tracking as track
 import spatial_graph as sg
 import time_series as ts
 import analysis_tools as at
+import functional_metrics as fm 
+import numpy as np
 ##########################################################################################
-folder_name_list = ['real_data_E2'] #,'real_data_E2'] 
+folder_name_list = ['synthetic_data_S1']
 
 ##########################################################################################
+# saving functional metrics --> 
+num_movies = len(folder_name_list)
+OOP_selected_all = np.zeros((num_movies))
+avg_contract_all = np.zeros((num_movies)) 
+avg_aligned_contract_all  = np.zeros((num_movies))
+s_til_all = np.zeros((num_movies))
+s_avg_all = np.zeros((num_movies))
+
+
+kk = 0 
+##########################################################################################
 for folder_name in folder_name_list:
-	include_eps = True
+	include_eps = False
 	##########################################################################################
 	##########################################################################################
 	##########################################################################################
 	# Convert the movie into a folder of .npy arrays, one for each frame 
 	##########################################################################################
 	fpp.file_pre_processing(folder_name,'avi')
+	#fpp.file_pre_processing_tif2(folder_name)
 	print(folder_name,"file pre processing complete")
+	fpp.make_movie_from_npy(folder_name)
+	print(folder_name, "movie from file pre processing complete")
 	# ##########################################################################################
 	# # Run segmentation
 	# ##########################################################################################
@@ -50,7 +66,7 @@ for folder_name in folder_name_list:
 	print(folder_name,"visualize segmentation complete")
 
 	# # --> visualize contract anim movie 
-	at.visualize_contract_anim_movie(folder_name,True,True,1.0/3.0,include_eps) # 3 peaks identified
+	at.visualize_contract_anim_movie(folder_name,True,True,0.75,include_eps) # 3 peaks identified
 	print(folder_name,"visualize contract anim movie complete")
 
 	# --> perform timeseries clustering 
@@ -90,3 +106,30 @@ for folder_name in folder_name_list:
 	# --> visualize F
 	at.visualize_F_full_movie(folder_name)
 	print(folder_name,"visualize F")
+	
+	# --> reset F 
+	at.adjust_F_if_movie_starts_not_contracted(folder_name)
+	
+	# --> redo visualization 
+	at.visualize_F_full_movie(folder_name)
+	print(folder_name,"visualize F full movie complete")
+	
+	# --> compute function metrics
+	OOP_selected, avg_contract, avg_aligned_contract, s_til, s_avg = fm.compute_metrics(folder_name)
+	OOP_selected_all[kk] = OOP_selected
+	avg_contract_all[kk] = avg_contract
+	avg_aligned_contract_all[kk]  = avg_aligned_contract
+	s_til_all[kk] = s_til
+	s_avg_all[kk] = s_avg
+	print(folder_name,"compute metrics complete")
+	print(folder_name,"OOP:", OOP_selected)
+	print(folder_name,"Ciso:", avg_contract)
+	print(folder_name,"Caligned:", avg_aligned_contract)
+	print(folder_name,"s_til:", avg_aligned_contract)
+	print(folder_name,"s_avg:", avg_aligned_contract)
+	
+	# --> make summary movie of Favg
+	include_eps = False
+	fm.visualize_lambda_as_functional_metric(folder_name, include_eps)
+	
+	kk += 1
