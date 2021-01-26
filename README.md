@@ -26,6 +26,9 @@ The real data (real_data_E1 and real_data_E2) was originally published with the 
 This figure shows the results of analyzing the real data with SarcGraph:
 https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/Expt_res.pdf
 
+The supplementary movies to the paper are also included here:
+https://github.com/elejeune11/Sarc-Graph/tree/main/Supplementary_Information
+
 
 # Code
 
