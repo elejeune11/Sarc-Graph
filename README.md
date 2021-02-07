@@ -1,7 +1,8 @@
 # Sarc-Graph
 Segmentation, tracking, and analysis of sarcomeres in hiPSC-CMs
 
-pre print link will be posted soon. 
+pre print link:
+https://arxiv.org/abs/2102.02412
 
 # Data
 
