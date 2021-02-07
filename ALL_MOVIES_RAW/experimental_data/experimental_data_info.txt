@@ -1,0 +1,19 @@
+For E1 and E2:
+Original data used in the paper can be found here — see sample dataset: 
+https://github.com/HMS-IDAC/SarcTrack
+
+For E3, E4, and E5:
+The full file sizes are too big for GitHub. Therefore, each movie is split into 5 parts. Once downloaded, the tifs can be merged into one file using:
+
+import numpy as np
+from skimage import io
+from tifffile import imsave
+
+fname_save = 'real_data_E3'
+mat = np.zeros((150, 512, 512))
+for kk in range(0,5):
+	ix1 = kk*30
+	ix2 = (kk+1)*30
+	mat[ix1:ix2,:,:] = io.imread('ALL_MOVIES_RAW/real_data/real_data_E3_frame%i_to%i.tif'%(ix1,ix2-1))
+
+imsave(fname_save,mat)
