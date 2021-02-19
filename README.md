@@ -4,6 +4,9 @@ Segmentation, tracking, and analysis of sarcomeres in hiPSC-CMs
 pre print link:
 https://arxiv.org/abs/2102.02412
 
+presentation slides:
+https://docs.google.com/presentation/d/1GwJxtIdyIpoed4Asnn68aFbQIn92cGqY_fT7-BPT2GI/edit?usp=sharing
+
 # Data
 
 ## Synthetic data
