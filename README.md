@@ -27,7 +27,10 @@ https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/validate_
 
 The real data (real_data_E1 and real_data_E2) was originally published with the paper ``An Adaptable Software Tool for Efficient Large-Scale Analysis of Sarcomere Function in hiPSC-Cardiomyocytes'' found at https://www.ahajournals.org/doi/full/10.1161/CIRCRESAHA.118.314505 . 
 
-This figure shows the results of analyzing the real data with SarcGraph:
+Additional real data (real_data_E3, real_data_E4, real_data_E5) can be found here:
+https://github.com/elejeune11/Sarc-Graph/tree/main/ALL_MOVIES_RAW/experimental_data
+
+This figure shows example results of analyzing the real data with SarcGraph:
 https://github.com/elejeune11/Sarc-Graph/blob/main/explanatory_figures/Expt_res.pdf
 
 The supplementary movies to the paper are also included here:
