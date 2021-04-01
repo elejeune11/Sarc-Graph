@@ -8,8 +8,11 @@ presentation slides:
 https://docs.google.com/presentation/d/1GwJxtIdyIpoed4Asnn68aFbQIn92cGqY_fT7-BPT2GI/edit?usp=sharing
 
 create a virtual environment and install all packages:
+
 conda create -n sarc_graph_env python=3.6.10
+
 conda activate sarc_graph_env
+
 pip install -r requirements.txt
 
 # Data
