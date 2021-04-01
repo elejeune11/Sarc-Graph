@@ -497,7 +497,7 @@ def compute_timeseries_individual_parameters(folder_name,include_eps=False):
 		deriv = np.gradient(data,x)
 		# go through and group into category by derivative 
 		count_C = 0; count_R = 0; count_F = 0
-		thresh_flat = 0.005
+		thresh_flat = 0.005*(np.max(data_med) - np.min(data_med))/0.2
 		for kk in range(0,x.shape[0]):
 			if deriv[kk] > thresh_flat: count_R += 1 
 			elif deriv[kk] < -1.0*thresh_flat: count_C += 1
@@ -512,7 +512,11 @@ def compute_timeseries_individual_parameters(folder_name,include_eps=False):
 		peaks_L, _ = find_peaks(-1.0*data_med,threshold=th,distance=di,width=wi)
 	
 		#num_peaks = 0.5 * peaks_U.shape[0] + 0.5 * peaks_L.shape[0]
-		num_peaks = peaks_L.shape[0]
+		#num_peaks = peaks_L.shape[0]
+		num_peaks = 0
+		for kk in range(0,peaks_L.shape[0]):
+			if data_med[peaks_L[kk]] < np.mean(data_med) - thresh_flat:
+				num_peaks += 1
 		if num_peaks == 0: num_peaks = 999999
 		mean_C = count_C / num_peaks
 		mean_R = count_R / num_peaks 
