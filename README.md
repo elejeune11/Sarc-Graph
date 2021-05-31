@@ -15,6 +15,8 @@ conda activate sarc_graph_env
 
 pip install -r requirements.txt
 
+(note: on Windows, "conda activate sarc_graph_env" may need to be replaced with "CALL connda.bat activate sarc_graph_env")
+
 # Data
 
 ## Synthetic data
