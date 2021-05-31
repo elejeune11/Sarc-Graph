@@ -15,6 +15,10 @@ conda activate sarc_graph_env
 
 pip install -r requirements.txt
 
+then, as a demo, you can try:
+
+python -i run_code.py
+
 (note: on Windows, "conda activate sarc_graph_env" may need to be replaced with "CALL conda.bat activate sarc_graph_env")
 
 (note: to create a virtual environment you will first need to install Anaconda https://docs.anaconda.com/anaconda/install/, and, on Windows, it may also be necessary to install visual studio https://visualstudio.microsoft.com/downloads/)
