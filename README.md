@@ -7,7 +7,7 @@ https://arxiv.org/abs/2102.02412
 presentation slides:
 https://docs.google.com/presentation/d/1GwJxtIdyIpoed4Asnn68aFbQIn92cGqY_fT7-BPT2GI/edit?usp=sharing
 
-**create a virtual environment and install all packages:**
+**create a virtual environment with Anaconda and install all packages:**
 
 conda create -n sarc_graph_env python=3.6.10
 
@@ -16,6 +16,8 @@ conda activate sarc_graph_env
 pip install -r requirements.txt
 
 (note: on Windows, "conda activate sarc_graph_env" may need to be replaced with "CALL conda.bat activate sarc_graph_env")
+
+(note: to create a virtual environment you will first need to install Anaconda https://docs.anaconda.com/anaconda/install/, and, on Windows, it may also be necessary to install visual studio https://visualstudio.microsoft.com/downloads/)
 
 # Data
 
