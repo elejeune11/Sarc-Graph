@@ -1,3 +1,8 @@
+# THIS REPOSITORY IS FOR LEGACY SARC-GRAPH 
+
+Please use the updated version: https://github.com/Sarc-Graph/sarcgraph
+
+
 # Sarc-Graph
 Segmentation, tracking, and analysis of sarcomeres in hiPSC-CMs
 
